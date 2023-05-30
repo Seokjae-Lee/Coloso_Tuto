@@ -7,6 +7,7 @@ TagManager:
   - Item
   - Floor
   - Jump_Item
+  - Regame
   layers:
   - Default
   - TransparentFX

@@ -6,18 +6,48 @@ using TMPro;
 
 public class Player_Script : MonoBehaviour
 {
+    public static Player_Script Instance { get; private set; }
+
+    public void Awake()
+    {
+        Instance = this;
+    }
+    private void OnDestroy()
+    {
+        Instance = null;
+    }
+
+    public void Init_Game()
+    {
+
+    }
+
+    public void Player_Dead()
+    {
+        Debug.Log("END");
+    }
+
+
+
+
+
+
+    public VariableJoystick variableJoystick;
+
+
     public float speed;
     private Rigidbody rb;
     public AudioSource item_sound;
 
     public bool isjump;
 
-    public int score;
+    public int score; 
 
     //public int left_item;
 
     public GameObject end_image;
     public GameObject over_image;
+    public GameObject regame_point;
 
     public float time_limit;
 
@@ -27,7 +57,9 @@ public class Player_Script : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-       // left_item = 8;
+        // left_item = 8;
+
+        GameManager.Instance.Player_Dead();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -36,6 +68,16 @@ public class Player_Script : MonoBehaviour
         {
             isjump = true;
         }
+
+        if(collision.gameObject.tag == "Regame")
+        {
+            Regame_On();
+        }
+    }
+
+    public void Regame_On()
+    {
+        this.transform.position = regame_point.transform.position;
     }
 
     // Update is called once per frame
@@ -67,12 +109,13 @@ public class Player_Script : MonoBehaviour
           
         }
 
-        score_text.text = "Score :" + score + "/100";
+        score_text.text = score + "/100";
     }
 
-    //¹°¸®»ç¿ëÀ» À§ÇØ »ç¿ëÇÏ´Â Áö¼ÓÈ£Ãâ
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½È£ï¿½ï¿½
     private void FixedUpdate()
     {
+        /* ì»´í“¨í„° ì´ë™ ì½”ë“œ
         float moveHorizontal = Input.GetAxis("Horizontal");
 
         float moveVertical = Input.GetAxis("Vertical");
@@ -97,5 +140,19 @@ public class Player_Script : MonoBehaviour
             over_image.SetActive(true);
             time_limit = 0;
         }
+        */
+        Vector3 direction = Vector3.forward * variableJoystick.Vertical + Vector3.right * variableJoystick.Horizontal;
+        rb.AddForce(direction * speed * Time.fixedDeltaTime, ForceMode.VelocityChange);
     }
+
+    public void jump_on()
+    {
+        if (isjump)
+        {
+            isjump = false;
+            rb.AddForce(Vector3.up * 5, ForceMode.Impulse);
+        }
+    }
+
 }
+

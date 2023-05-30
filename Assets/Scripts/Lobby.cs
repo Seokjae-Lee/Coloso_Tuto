@@ -8,6 +8,6 @@ public class Lobby : MonoBehaviour
 {
    public void Game_start_button_on()
     {
-        SceneManager.LoadScene("BallGame");
+        SceneManager.LoadScene("BallGame_Android");
     }
 }
