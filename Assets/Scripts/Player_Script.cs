@@ -53,6 +53,17 @@ public class Player_Script : MonoBehaviour
 
     public TextMeshProUGUI score_text;
     public TextMeshProUGUI time_text;
+
+    public Animator anim;
+
+
+
+
+
+
+
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -60,6 +71,7 @@ public class Player_Script : MonoBehaviour
         // left_item = 8;
 
         GameManager.Instance.Player_Dead();
+        anim = GetComponent<Animator>();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -141,8 +153,21 @@ public class Player_Script : MonoBehaviour
             time_limit = 0;
         }
         */
+
+        
+
         Vector3 direction = Vector3.forward * variableJoystick.Vertical + Vector3.right * variableJoystick.Horizontal;
-        rb.AddForce(direction * speed * Time.fixedDeltaTime, ForceMode.VelocityChange);
+        transform.LookAt(transform.position + direction);
+        //rb.AddForce(direction * speed * Time.fixedDeltaTime, ForceMode.VelocityChange); //구체 이동
+        transform.position += direction * speed * Time.deltaTime;
+        anim.SetBool("isRun", direction != Vector3.zero);
+
+        FreezeRotation();
+    }
+
+    void FreezeRotation()
+    {
+        rb.angularVelocity = Vector3.zero;
     }
 
     public void jump_on()
